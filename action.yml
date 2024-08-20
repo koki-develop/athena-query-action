@@ -1,20 +1,36 @@
-name: Hello World
-description: Greet someone and record the time
+name: Athena Query Action
+description: Execute a query on Amazon Athena.
 
 branding:
-  icon: send
-  color: white
+  icon: database
+  color: purple
 
 inputs:
-  message:
-    description: |-
-      The message to echo.
+  query:
+    description: The SQL query statements to be executed.
+    required: true
+  database:
+    description: The name of the database used in the query execution. The database must exist in the catalog.
     required: false
-    default: "Hello, world!"
-
+  catalog:
+    description: The name of the data catalog used in the query execution.
+    required: false
+  output-location:
+    description: The location in Amazon S3 where your query and calculation results are stored, such as "s3://path/to/query/bucket/".
+    required: false
+  workgroup:
+    description: The name of the workgroup in which the query is being started.
+    required: false
+  parameters:
+    description: |
+      A list of values separated by newlines for the parameters in a query.
+      The values are applied sequentially to the parameters in the query in the order in which the parameters occur.
+    required: false
 outputs:
-  message:
-    description: The message that was echoed.
+  execution-id:
+    description: The unique ID of the query that ran as a result of this request.
+  output-location:
+    description: The location in Amazon S3 where your query and calculation results are stored, such as "s3://path/to/query/bucket/00000000-0000-0000-0000-000000000000.csv".
 
 runs:
   using: node20
