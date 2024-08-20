@@ -1,61 +1,37 @@
-# ts-action-template
+# Athena Query Action
 
-[![GitHub Release](https://img.shields.io/github/v/release/koki-develop/ts-action-template)](https://github.com/koki-develop/ts-action-template/releases/latest)
-[![CI](https://img.shields.io/github/actions/workflow/status/koki-develop/ts-action-template/ci.yml?branch=main&logo=github&style=flat&label=ci)](https://github.com/koki-develop/ts-action-template/actions/workflows/ci.yml)
-[![Build](https://img.shields.io/github/actions/workflow/status/koki-develop/ts-action-template/build.yml?branch=main&logo=github&style=flat&label=build)](https://github.com/koki-develop/ts-action-template/actions/workflows/build.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/koki-develop/athena-query-action)](https://github.com/koki-develop/athena-query-action/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/koki-develop/athena-query-action/ci.yml?branch=main&logo=github&style=flat&label=ci)](https://github.com/koki-develop/athena-query-action/actions/workflows/ci.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/koki-develop/athena-query-action/build.yml?branch=main&logo=github&style=flat&label=build)](https://github.com/koki-develop/athena-query-action/actions/workflows/build.yml)
 
-This is a template for creating GitHub Actions in TypeScript.
+Execute a query on Amazon Athena.
 
-## Requirements
+## Usage
 
-[Bun](https://bun.sh/) is required.
-
-## Getting Started
-
-1. Click the `Use this template` button to create a new repository.  
-2. Move to `Settings` > `Actions` > `General` and enable `Allow GitHub Actions to create and approve pull requests`.
-
-## Development
-
-Install dependencies with `bun install`.
-
-```console
-$ bun install
+```yaml
+- uses: koki-develop/athena-query-action@v1
+  with:
+    query: SELECT * FROM my_table;
+    output-location: s3://path/to/query/bucket/
 ```
 
-Edit [`action.yml`](./action.yml) to set up the action.  
-Edit [`src/main.ts`](./src/main.ts) to implement the action.
+### Inputs
 
-## Test
+| Name | Required | Description |
+| ---- | -------- | ----------- |
+| query | **Yes** | The SQL query statements to be executed. |
+| database | No | The name of the database used in the query execution. The database must exist in the catalog. |
+| catalog | No | The name of the data catalog used in the query execution. |
+| output-location | No | The location in Amazon S3 where your query and calculation results are stored, such as `s3://path/to/query/bucket/`. |
+| workgroup | No | The name of the workgroup in which the query is being started. |
+| parameters | No | A list of values separated by commas for the parameters in a query. The values are applied sequentially to the parameters in the query in the order in which the parameters occur. |
 
-Run `bun run test` to test the action. The testing framework is [Vitest](https://vitest.dev/).
+### Outputs
 
-```console
-$ bun run test
-```
-
-## Release
-
-First, run `bun run build` to build the source code. The built code will be output to the `dist/` directory. Commit the content of this directory.
-
-```console
-$ bun run build
-$ git add dist
-$ git commit -m "Build"
-```
-
-Finally, create a tag in semver format.
-
-> [!NOTE]
-> The major version tag (e.g. `v1`) will be created automatically by GitHub Actions.  
-> See: [`.github/workflows/major-version-sync.yml`](./.github/workflows/major-version-sync.yml)
-
-```console
-$ git tag v1.0.0
-$ git push origin v1.0.0
-```
-
-Create a release on GitHub as needed.
+| Name | Description |
+| ---- | ----------- |
+| execution-id | The unique ID of the query that ran as a result of this request. |
+| output-location | The location in Amazon S3 where your query and calculation results are stored, such as `s3://path/to/query/bucket/00000000-0000-0000-0000-000000000000.csv`. |
 
 ## LICENSE
 

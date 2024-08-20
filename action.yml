@@ -23,7 +23,7 @@ inputs:
     required: false
   parameters:
     description: |
-      A list of values separated by newlines for the parameters in a query.
+      A list of values separated by commas for the parameters in a query.
       The values are applied sequentially to the parameters in the query in the order in which the parameters occur.
     required: false
 outputs:
