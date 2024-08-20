@@ -6,33 +6,35 @@ import {
   StartQueryExecutionCommand,
   type StartQueryExecutionCommandInput,
 } from "@aws-sdk/client-athena";
+import { parse } from "csv-parse/sync";
+import { parseInputs } from "./input";
 
 export const main = async () => {
   try {
-    const inputs = {
+    const inputs = parseInputs({
       query: core.getInput("query"),
       outputLocation: core.getInput("output-location"),
       workgroup: core.getInput("workgroup"),
       database: core.getInput("database"),
       catalog: core.getInput("catalog"),
-      parameters: core.getInput("parameters").trim().split("\n"),
-    } as const;
+      parameters: core.getInput("parameters"),
+    });
 
     const client = new AthenaClient();
 
     const input: StartQueryExecutionCommandInput = {
       QueryString: inputs.query,
     };
-    if (inputs.outputLocation !== "") {
+    if (inputs.outputLocation !== undefined) {
       input.ResultConfiguration = { OutputLocation: inputs.outputLocation };
     }
-    if (inputs.workgroup !== "") {
+    if (inputs.workgroup !== undefined) {
       input.WorkGroup = inputs.workgroup;
     }
-    if (inputs.database !== "" || inputs.catalog !== "") {
+    if (inputs.database !== undefined || inputs.catalog !== undefined) {
       input.QueryExecutionContext = {
-        Database: inputs.database || undefined,
-        Catalog: inputs.catalog || undefined,
+        Database: inputs.database,
+        Catalog: inputs.catalog,
       };
     }
     if (inputs.parameters.length > 0) {
